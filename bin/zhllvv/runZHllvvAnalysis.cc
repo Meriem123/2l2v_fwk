@@ -123,41 +123,38 @@ LorentzVector getSVFit(pat::MET met, std::vector<patUtils::GenericLepton> selLep
     else return LorentzVector(selLeptons[higgsCandL1].p4()+selLeptons[higgsCandL2].p4());
 
 
-  SVfitStandaloneAlgorithm algo(measuredTauLeptons, met.px(), met.py() , covMET, 2);
-  algo.addLogM(false);
+ SVfitStandaloneAlgorithm algo(measuredTauLeptons, met.px(), met.py() , covMET, 2);
+ algo.addLogM(false);
+ algo.fit();
+ if(algo.isValidSolution()){
+ return algo.fittedDiTauSystem();	
+	
+	
  // edm::FileInPath inputFileName_visPtResolution("TauAnalysis/SVfitStandalone/data/svFitVisMassAndPtResolutionPDF.root");
  // TH1::AddDirectory(false);
  // TFile* inputFile_visPtResolution = new TFile(inputFileName_visPtResolution.fullPath().data());
  // algo.shiftVisPt(true, inputFile_visPtResolution);
  
 
-  algo.integrateMarkovChain();
+ // algo.integrateMarkovChain();
  
-  double mass = static_cast<svFitStandalone::MCPtEtaPhiMassAdapter*>(algo.getMCQuantitiesAdapter())->getMass(); // full mass of tau lepton pair in units of GeV
+ // double mass = static_cast<svFitStandalone::MCPtEtaPhiMassAdapter*>(algo.getMCQuantitiesAdapter())->getMass(); // full mass of tau lepton pair in units of GeV
 
 
   //double mass = algo.getMass(); // Full SVFit mass - return value is in units of GeV
  // double transverse_mass = algo.getTransverseMass(); // Transverse SVFit mass
-
-
-if ( algo.isValidSolution() ) {
-    std::cout << "found mass = " << mass << std::endl;
-  } else {
-    std::cout << "sorry -- status of NLL is not valid [" << algo.fitStatus() << "]" << std::endl;
-  
- }
-  return LorentzVector(selLeptons[higgsCandL1].p4()+selLeptons[higgsCandL2].p4());
-}
-
-
+//if ( algo.isValidSolution() ) {
+  //  std::cout << "found mass = " << mass << std::endl;
+ // } else {
+  //  std::cout << "sorry -- status of NLL is not valid [" << algo.fitStatus() << "]" << std::endl;  
+// }
+//  return LorentzVector(selLeptons[higgsCandL1].p4()+selLeptons[higgsCandL2].p4());
+//}
 //  measuredTauLeptons.push_back(svFitStandalone::MeasuredTauLepton(abs(selLeptons[higgsCandL1].pdgId())==15?svFitStandalone::kTauToHadDecay:abs(selLeptons[higgsCandL1].pdgId())==11?svFitStandalone::kTauToElecDecay:svFitStandalone::kTauToMuDecay,selLeptons[higgsCandL1].pt(), selLeptons[higgsCandL1].eta(), selLeptons[higgsCandL1].phi(), selLeptons[higgsCandL1].mass() ));
  // measuredTauLeptons.push_back(svFitStandalone::MeasuredTauLepton(abs(selLeptons[higgsCandL2].pdgId())==15?svFitStandalone::kTauToHadDecay:abs(selLeptons[higgsCandL2].pdgId())==11?svFitStandalone::kTauToElecDecay:svFitStandalone::kTauToMuDecay, selLeptons[higgsCandL2].pt(), selLeptons[higgsCandL2].eta(), selLeptons[higgsCandL2].phi(), selLeptons[higgsCandL2].mass() ));
 
   //SVfitStandaloneAlgorithm algo(measuredTauLeptons, met.px(), met.py() , covMET, 0);
-  //algo.addLogM(false);
- // algo.fit();
- // if(algo.isValidSolution()){
- //   return algo.fittedDiTauSystem();
+ 
 
  //**********************************************************************************************//
 bool passHiggsCuts(std::vector<patUtils::GenericLepton> selLeptons, int higgsCandL1, int higgsCandL2, float isoElCut, float isoMuCut, const char* isoHaCut, float sumPtCut, bool requireId, reco::VertexCollection vtx)
